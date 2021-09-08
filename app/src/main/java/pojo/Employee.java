@@ -2,11 +2,18 @@ package pojo;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
+import converters.Converter;
+
 @Entity(tableName = "employees")
+@TypeConverters(value = Converter.class)
 public class Employee {
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -22,9 +29,9 @@ public class Employee {
     @SerializedName("avatr_url")
     @Expose
     private String avatrUrl;
-//    @SerializedName("specialty")
-//    @Expose
-//    private List<Speciality> specialty = null;
+    @SerializedName("specialty")
+    @Expose
+    private List<Speciality> specialty = null;
 
     public int getId() {
         return id;
@@ -66,11 +73,11 @@ public class Employee {
         this.avatrUrl = avatrUrl;
     }
 
-//    public List<Speciality> getSpecialty() {
-//        return specialty;
-//    }
-//
-//    public void setSpecialty(List<Speciality> specialty) {
-//        this.specialty = specialty;
-//    }
+    public List<Speciality> getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(List<Speciality> specialty) {
+        this.specialty = specialty;
+    }
 }

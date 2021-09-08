@@ -1,6 +1,7 @@
 package screens.employees;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import adapter.EmployeeAdapter;
 import pojo.Employee;
+import pojo.Speciality;
 
 
 public class EmployeeListActivity extends AppCompatActivity {
@@ -24,7 +26,7 @@ public class EmployeeListActivity extends AppCompatActivity {
     private EmployeeAdapter adapter;
     private EmployeeViewModel viewModel;
 
-     @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -38,12 +40,18 @@ public class EmployeeListActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Employee> employees) {
                 adapter.setEmployees(employees);
+                for (Employee employee : employees) {
+                    List<Speciality> specialities = employee.getSpecialty();
+                    for (Speciality speciality : specialities) {
+                        Log.i("Spec", speciality.getName());
+                    }
+                }
             }
         });
         viewModel.getErrors().observe(this, new Observer<Throwable>() {
             @Override
             public void onChanged(Throwable throwable) {
-                if(throwable!=null) {
+                if (throwable != null) {
                     Toast.makeText(EmployeeListActivity.this, "Error", Toast.LENGTH_SHORT).show();
                     viewModel.clearErrors();
                 }
