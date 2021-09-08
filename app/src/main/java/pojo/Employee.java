@@ -6,8 +6,6 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 @Entity(tableName = "employees")
 public class Employee {
     @PrimaryKey(autoGenerate = true)
@@ -17,7 +15,7 @@ public class Employee {
     private String name;
     @SerializedName("l_name")
     @Expose
-    private String lName;
+    private String lastName;
     @SerializedName("birthday")
     @Expose
     private String birthday;
@@ -44,12 +42,12 @@ public class Employee {
         this.name = fName;
     }
 
-    public String getlName() {
-        return lName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setlName(String lName) {
-        this.lName = lName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getBirthday() {
