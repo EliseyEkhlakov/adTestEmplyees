@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,38 +18,38 @@ import adapter.EmployeeAdapter;
 import pojo.Employee;
 
 
-public class EmployeeListActivity extends AppCompatActivity implements EmployeesListView{
+public class EmployeeListActivity extends AppCompatActivity {
 
+    private RecyclerView recyclerViewEmployees;
     private EmployeeAdapter adapter;
-    private EmployeeListPresenter presenter;
+    private EmployeeViewModel viewModel;
 
-    @Override
-    protected void onDestroy() {
-        presenter.disposeDisposable();
-        super.onDestroy();
-    }
-
-    @Override
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        presenter = new EmployeeListPresenter(this);
-        RecyclerView recyclerViewEmployees = findViewById(R.id.recyclerViewEmployees);
+        recyclerViewEmployees = findViewById(R.id.recyclerViewEmployees);
         adapter = new EmployeeAdapter();
         adapter.setEmployees(new ArrayList<>());
         recyclerViewEmployees.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewEmployees.setAdapter(adapter);
-        presenter.loadData();
-    }
-
-    @Override
-    public void showData(List<Employee> employees) {
-        adapter.setEmployees(employees);
-    }
-
-    @Override
-    public void showError() {
-        Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+        viewModel = new ViewModelProvider(this).get(EmployeeViewModel.class);
+        viewModel.getEmployees().observe(this, new Observer<List<Employee>>() {
+            @Override
+            public void onChanged(List<Employee> employees) {
+                adapter.setEmployees(employees);
+            }
+        });
+        viewModel.getErrors().observe(this, new Observer<Throwable>() {
+            @Override
+            public void onChanged(Throwable throwable) {
+                if(throwable!=null) {
+                    Toast.makeText(EmployeeListActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    viewModel.clearErrors();
+                }
+            }
+        });
+        viewModel.loadData();
     }
 
 }
